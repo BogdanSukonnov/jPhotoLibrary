@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTree;
 
 class MainFrame extends JFrame {
 
@@ -13,7 +14,7 @@ class MainFrame extends JFrame {
 	private JPanel contentPane;
 	
 	MainFrame() {
-		super(Constants.mainFrameTitle);
+		super(UI_Constants.MAIN_FRAME_TITLE.toString());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -21,7 +22,7 @@ class MainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnPreferences = new JButton(Constants.prefsButtonTitle);
+		JButton btnPreferences = new JButton(UI_Constants.PREFS_BTN_TITLE.toString());
 		btnPreferences.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				openPrefsDialog();				
@@ -30,7 +31,7 @@ class MainFrame extends JFrame {
 		btnPreferences.setBounds(327, 6, 117, 29);
 		contentPane.add(btnPreferences);
 		
-		JButton btnScan = new JButton(Constants.scanButtonTitle);
+		JButton btnScan = new JButton(UI_Constants.SCAN_BTN_TITLE.toString());
 		btnScan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JPhotoLibrary.scanDirectories();
@@ -38,6 +39,13 @@ class MainFrame extends JFrame {
 		});
 		btnScan.setBounds(6, 6, 117, 29);
 		contentPane.add(btnScan);		
+		
+		JTree tree = new JTree();
+		tree.setRootVisible(false);
+		tree.setModel(new JPL_TreeModel());
+		tree.setBounds(6, 36, 242, 236);
+		//tree.mode
+		contentPane.add(tree);		
 		
 	}
 		
@@ -49,5 +57,4 @@ class MainFrame extends JFrame {
 			e.printStackTrace();
 		}		
 	}
-	
 }

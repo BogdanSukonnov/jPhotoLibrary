@@ -3,7 +3,7 @@ import java.util.prefs.Preferences;
 
 class ProgramPreferences {
 		
-	static private Preferences prefsRootNode = Preferences.userRoot().node(Constants.prefsNodeName);
+	static private Preferences prefsRootNode = Preferences.userRoot().node(UI_Constants.PREFS_NODE_NAME.toString());
 	
 	static public enum Prefs {
 		ControlledPaths("[]"), MainDB("");

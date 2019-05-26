@@ -38,7 +38,7 @@ class PrefsDialog extends JDialog {
 	 * @param mainFrame 
 	 */
 	public PrefsDialog(MainFrame mainFrame) {
-		super(mainFrame, Constants.prefsDialogTitle, true);
+		super(mainFrame, UI_Constants.PREFS_DIALOG_TITLE.toString(), true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -191,7 +191,7 @@ class PrefsDialog extends JDialog {
 
 	private void preferencesChanged() {
 		okButton.setEnabled(true);			
-		setTitle(Constants.prefsDialogTitle + "*");		
+		setTitle(UI_Constants.PREFS_DIALOG_TITLE.toString() + "*");		
 	}
 	
 }
