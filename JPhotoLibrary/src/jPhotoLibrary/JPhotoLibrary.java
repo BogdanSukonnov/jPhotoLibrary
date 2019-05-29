@@ -7,40 +7,55 @@ import java.util.Set;
 
 public class JPhotoLibrary {
 	
-	static private String[] foldersToScan;
-	static final String thisPC = "PC1"; //TODO This PC
-	static private Map<Long, Set<JPL_File>> localLengthsHM = new HashMap<>();
-	static private Map<String, Set<JPL_File>> localChecksumHM = new HashMap<>();
-	static private Map<String, Set<JPL_File>> localDuplicatesHM = new HashMap<>();
-	static private Set<JPL_File> filesHS = new HashSet<>();
+	private String[] foldersToScan;
+	final String thisPC = "PC1"; //TODO This PC
+	private Map<Long, Set<JPL_File>> localLengthsHM = new HashMap<>();
+	private Map<String, Set<JPL_File>> localChecksumHM = new HashMap<>();
+	private Map<String, Set<JPL_File>> localDuplicatesHM = new HashMap<>();
+	private Set<JPL_File> filesHS = new HashSet<>();
+	private JPL_TreeModel treeModel = new JPL_TreeModel(null, false);
 		
 	public static void main(String[] args) {
-		setDirectoriesToScan();
-		openMainFrame();				
+		JPhotoLibrary jPhotoLibrary = new JPhotoLibrary();
+		jPhotoLibrary.start();
 	}
 	
-	private static void openMainFrame() {
+	private JPhotoLibrary() {				
+	}
+	
+	private void start() {
+		setDirectoriesToScan();
+		openMainFrame();		
+	}
+	
+	private void openMainFrame() {
+		updateTreeModel();
 		EventQueue.invokeLater(new Runnable() {
+			JPhotoLibrary jPhotoLibrary;
+			Runnable init(JPhotoLibrary jPhotoLibrary) {
+				this.jPhotoLibrary = jPhotoLibrary;
+				return this;
+			};
 			public void run() {
 				try {
-					MainFrame frame = new MainFrame();
+					MainFrame frame = new MainFrame(treeModel, jPhotoLibrary);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		});		
+		}.init(this));		
 	}
 	
-	static void setDirectoriesToScan() {
+	void setDirectoriesToScan() {
 		foldersToScan = ProgramPreferences.getPrefAsArray(ProgramPreferences.Prefs.ControlledPaths);		
 	}
 	
-	static String[] foldersToScan() {
+	private String[] foldersToScan() {
 		return foldersToScan;
 	}
 	
-	static void newFile(Long length, String pc, String path, String parent, String lastModificated) {
+	void newFile(Long length, String pc, String path, String parent, String lastModificated) {
 		//create our file abstraction
 		JPL_File jPL_file = new JPL_File(length, pc, path, parent, lastModificated);
 		//add file to set
@@ -54,7 +69,7 @@ public class JPhotoLibrary {
 		}		
 	}
 	
-	static void checkForDuplicate(JPL_File jpl_file) {
+	void checkForDuplicate(JPL_File jpl_file) {
 		String checksum = jpl_file.getChecksum();
 		Set<JPL_File> sameChecksumSet = localChecksumHM.getOrDefault(checksum, new HashSet<JPL_File>());
 		sameChecksumSet.add(jpl_file);
@@ -64,15 +79,26 @@ public class JPhotoLibrary {
 		}
 	}
 	
-	static void scanDirectories() {
-		new FileWorker().scanDirectories();
+	void scanDirectories() {
+		new FileWorker(this).scanDirectories(foldersToScan());
+		printDuplicates();
+	}
+
+	private void updateTreeModel() {
+		JPL_TreeNode rootNode = new JPL_TreeNode(new String("root node"));
+		treeModel.setRoot(rootNode);
+		rootNode.add(new JPL_TreeNode(new String("node 1")));
+		rootNode.add(new JPL_TreeNode(new String("node 2")));
+	}
+
+	private void printDuplicates() {
 		for (Map.Entry<String, Set<JPL_File>> pair : localDuplicatesHM.entrySet()) {			
 			Set<JPL_File> sameChecksumSet = pair.getValue();
 			for (JPL_File file : sameChecksumSet) {
 				System.out.print(" = " + file.getPath());			
 			}
 			System.out.println(" == " + pair.getKey());
-		}		
+		}
 	}
 
 }

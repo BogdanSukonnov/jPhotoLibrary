@@ -15,9 +15,13 @@ import org.h2.util.StringUtils;
 class FileWorker {
 	
 	static String excludedFilesRegexPattern;
+	private JPhotoLibrary jPhotoLibrary;
 	
-	public void scanDirectories() {		
-		String[] directoriesToScan = JPhotoLibrary.foldersToScan();
+	public FileWorker(JPhotoLibrary jPhotoLibrary) {
+		this.jPhotoLibrary = jPhotoLibrary;
+	}
+	
+	public void scanDirectories(String[] directoriesToScan) {		
 		for (String directoryStr : directoriesToScan) {
 			//check if the path is correct directory
 			File directoryFile = new File(directoryStr);
@@ -61,7 +65,7 @@ class FileWorker {
 				return FileVisitResult.CONTINUE;				
 			}
 			BasicFileAttributes fileAttrs = Files.readAttributes(file, BasicFileAttributes.class);
-		    JPhotoLibrary.newFile(fileAttrs.size(), JPhotoLibrary.thisPC, file.toString(), file.getParent().toString(), fileAttrs.lastModifiedTime().toString()); 
+			jPhotoLibrary.newFile(fileAttrs.size(), jPhotoLibrary.thisPC, file.toString(), file.getParent().toString(), fileAttrs.lastModifiedTime().toString()); 
 			return FileVisitResult.CONTINUE;
 		}
 

@@ -12,9 +12,11 @@ class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPhotoLibrary jPhotoLibrary;
 	
-	MainFrame() {
+	MainFrame(JPL_TreeModel treeModel, JPhotoLibrary jPhotoLibrary) {
 		super(UI_Constants.MAIN_FRAME_TITLE.toString());
+		this.jPhotoLibrary = jPhotoLibrary;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -34,7 +36,7 @@ class MainFrame extends JFrame {
 		JButton btnScan = new JButton(UI_Constants.SCAN_BTN_TITLE.toString());
 		btnScan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JPhotoLibrary.scanDirectories();
+				jPhotoLibrary.scanDirectories();
 			}
 		});
 		btnScan.setBounds(6, 6, 117, 29);
@@ -42,16 +44,15 @@ class MainFrame extends JFrame {
 		
 		JTree tree = new JTree();
 		tree.setRootVisible(false);
-		tree.setModel(new JPL_TreeModel());
+		tree.setModel(treeModel);
 		tree.setBounds(6, 36, 242, 236);
-		//tree.mode
 		contentPane.add(tree);		
 		
 	}
 		
 	void openPrefsDialog() {
 		try {
-			PrefsDialog prefsDialog = new PrefsDialog(MainFrame.this);
+			PrefsDialog prefsDialog = new PrefsDialog(MainFrame.this, jPhotoLibrary);
 			prefsDialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -32,13 +32,15 @@ class PrefsDialog extends JDialog {
 	private JButton btnRemoveDirectory;
 	private JList<String> listDirectories;	
 	private JButton okButton;
-
+	private JPhotoLibrary jPhotoLibrary;
+	
 	/**
 	 * Create the dialog.
 	 * @param mainFrame 
 	 */
-	public PrefsDialog(MainFrame mainFrame) {
+	public PrefsDialog(MainFrame mainFrame, JPhotoLibrary jPhotoLibrary) {
 		super(mainFrame, UI_Constants.PREFS_DIALOG_TITLE.toString(), true);
+		this.jPhotoLibrary = jPhotoLibrary;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -154,7 +156,7 @@ class PrefsDialog extends JDialog {
 		String stringDirectoriesToScan = directoriesListModel.toString();
 		Boolean prefsSaved = ProgramPreferences.putPref(ProgramPreferences.Prefs.ControlledPaths, stringDirectoriesToScan);
 		if (prefsSaved) {
-			JPhotoLibrary.setDirectoriesToScan();
+			jPhotoLibrary.setDirectoriesToScan();
 			dispose();
 		} else {
 			//TODO can't save preferences, what will we do?
