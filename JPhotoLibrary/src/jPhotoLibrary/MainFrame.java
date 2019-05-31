@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTree;
+import net.miginfocom.swing.MigLayout;
 
 class MainFrame extends JFrame {
 
@@ -22,7 +23,6 @@ class MainFrame extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 		
 		JButton btnPreferences = new JButton(UI_Constants.PREFS_BTN_TITLE.toString());
 		btnPreferences.addActionListener(new ActionListener() {
@@ -30,8 +30,8 @@ class MainFrame extends JFrame {
 				openPrefsDialog();				
 			}
 		});
-		btnPreferences.setBounds(327, 6, 117, 29);
-		contentPane.add(btnPreferences);
+		contentPane.setLayout(new MigLayout("", "[117px][204px][117px]", "[29px][236px]"));
+		contentPane.add(btnPreferences, "cell 2 0,alignx left,aligny top");
 		
 		JButton btnScan = new JButton(UI_Constants.SCAN_BTN_TITLE.toString());
 		btnScan.addActionListener(new ActionListener() {
@@ -39,14 +39,12 @@ class MainFrame extends JFrame {
 				jPhotoLibrary.scanDirectories();
 			}
 		});
-		btnScan.setBounds(6, 6, 117, 29);
-		contentPane.add(btnScan);		
+		contentPane.add(btnScan, "cell 0 0,growx,aligny top");		
 		
 		JTree tree = new JTree();
 		tree.setRootVisible(false);
 		tree.setModel(treeModel);
-		tree.setBounds(6, 36, 242, 236);
-		contentPane.add(tree);		
+		contentPane.add(tree, "cell 0 1 3 1,grow");		
 		
 	}
 		

@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.tree.TreeNode;
+
 public class JPhotoLibrary {
 	
 	private String[] foldersToScan;
@@ -13,7 +15,7 @@ public class JPhotoLibrary {
 	private Map<String, Set<JPL_File>> localChecksumHM = new HashMap<>();
 	private Map<String, Set<JPL_File>> localDuplicatesHM = new HashMap<>();
 	private Set<JPL_File> filesHS = new HashSet<>();
-	private JPL_TreeModel treeModel = new JPL_TreeModel(null, false);
+	private JPL_TreeModel treeModel = new JPL_TreeModel(new JPL_TreeNode(new String("root node")), true);
 		
 	public static void main(String[] args) {
 		JPhotoLibrary jPhotoLibrary = new JPhotoLibrary();
@@ -28,8 +30,7 @@ public class JPhotoLibrary {
 		openMainFrame();		
 	}
 	
-	private void openMainFrame() {
-		updateTreeModel();
+	private void openMainFrame() {		
 		EventQueue.invokeLater(new Runnable() {
 			JPhotoLibrary jPhotoLibrary;
 			Runnable init(JPhotoLibrary jPhotoLibrary) {
@@ -63,7 +64,7 @@ public class JPhotoLibrary {
 		//get files set by length
 		Set<JPL_File> sameLengthFilesHS = localLengthsHM.getOrDefault(length, new HashSet<JPL_File>());
 		sameLengthFilesHS.add(jPL_file);
-		localLengthsHM.put(length, sameLengthFilesHS);
+		localLengthsHM.putIfAbsent(length, sameLengthFilesHS);
 		if (sameLengthFilesHS.size() > 1) {
 			sameLengthFilesHS.forEach(file -> checkForDuplicate(file));			
 		}		
@@ -73,32 +74,24 @@ public class JPhotoLibrary {
 		String checksum = jpl_file.getChecksum();
 		Set<JPL_File> sameChecksumSet = localChecksumHM.getOrDefault(checksum, new HashSet<JPL_File>());
 		sameChecksumSet.add(jpl_file);
-		localChecksumHM.put(checksum, sameChecksumSet);
+		localChecksumHM.putIfAbsent(checksum, sameChecksumSet);
 		if (sameChecksumSet.size() > 1) {
-			localDuplicatesHM.put(checksum, sameChecksumSet);
+			localDuplicatesHM.putIfAbsent(checksum, sameChecksumSet);
 		}
 	}
 	
 	void scanDirectories() {
 		new FileWorker(this).scanDirectories(foldersToScan());
-		printDuplicates();
+		updateTreeModel();
 	}
 
 	private void updateTreeModel() {
-		JPL_TreeNode rootNode = new JPL_TreeNode(new String("root node"));
-		treeModel.setRoot(rootNode);
-		rootNode.add(new JPL_TreeNode(new String("node 1")));
-		rootNode.add(new JPL_TreeNode(new String("node 2")));
-	}
-
-	private void printDuplicates() {
+		JPL_TreeNode rootNode = (JPL_TreeNode) treeModel.getRoot();	
 		for (Map.Entry<String, Set<JPL_File>> pair : localDuplicatesHM.entrySet()) {			
 			Set<JPL_File> sameChecksumSet = pair.getValue();
-			for (JPL_File file : sameChecksumSet) {
-				System.out.print(" = " + file.getPath());			
-			}
-			System.out.println(" == " + pair.getKey());
+			treeModel.add(sameChecksumSet);
 		}
+		treeModel.reload();
 	}
 
 }
