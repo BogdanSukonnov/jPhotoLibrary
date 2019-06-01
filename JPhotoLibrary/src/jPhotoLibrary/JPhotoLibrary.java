@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.tree.TreeNode;
-
 public class JPhotoLibrary {
 	
 	private String[] foldersToScan;
@@ -86,7 +84,6 @@ public class JPhotoLibrary {
 	}
 
 	private void updateTreeModel() {
-		JPL_TreeNode rootNode = (JPL_TreeNode) treeModel.getRoot();	
 		for (Map.Entry<String, Set<JPL_File>> pair : localDuplicatesHM.entrySet()) {			
 			Set<JPL_File> sameChecksumSet = pair.getValue();
 			treeModel.add(sameChecksumSet);
