@@ -8,6 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTree;
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JScrollPane;
+import java.awt.Rectangle;
+import java.awt.Component;
+import java.awt.Dimension;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
 
 class MainFrame extends JFrame {
 
@@ -30,8 +36,8 @@ class MainFrame extends JFrame {
 				openPrefsDialog();				
 			}
 		});
-		contentPane.setLayout(new MigLayout("", "[117px][204px][117px]", "[29px][236px]"));
-		contentPane.add(btnPreferences, "cell 2 0,alignx left,aligny top");
+		contentPane.setLayout(new MigLayout("", "[117px][313.00px]", "[29px][244.00px]"));
+		contentPane.add(btnPreferences, "cell 1 0,alignx left,aligny top");
 		
 		JButton btnScan = new JButton(UI_Constants.SCAN_BTN_TITLE.toString());
 		btnScan.addActionListener(new ActionListener() {
@@ -39,12 +45,21 @@ class MainFrame extends JFrame {
 				jPhotoLibrary.scanDirectories();
 			}
 		});
-		contentPane.add(btnScan, "cell 0 0,growx,aligny top");		
+		contentPane.add(btnScan, "cell 0 0,growx,aligny top");
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(new LineBorder(new Color(0, 0, 0)));
+		scrollPane.setMaximumSize(new Dimension(2000, 2000));
+		scrollPane.setPreferredSize(new Dimension(2000, 2000));
+		contentPane.add(scrollPane, "south");
 		
 		JTree tree = new JTree();
+		tree.setVisibleRowCount(120);
+		tree.setMaximumSize(new Dimension(2000, 2000));
+		tree.setMinimumSize(new Dimension(30, 30));
+		scrollPane.setViewportView(tree);
 		tree.setRootVisible(false);
 		tree.setModel(treeModel);
-		contentPane.add(tree, "cell 0 1 3 1,grow");		
 		
 	}
 		
