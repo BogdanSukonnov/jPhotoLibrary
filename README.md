@@ -1,5 +1,7 @@
 # jPhotoLibrary
 
+#### Swing, Preferences, H2 embedded, Tree model
+
 Pet project to solve an ancient problem: photos from different devices saved in several computers. 
 
 The final version of the program will be a desktop application installed on all home pcs with common settings and database.  
